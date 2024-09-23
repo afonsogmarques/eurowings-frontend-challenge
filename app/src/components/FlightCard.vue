@@ -26,5 +26,6 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: var(--drop-shadow);
+    width: 100%;
   }
 </style>

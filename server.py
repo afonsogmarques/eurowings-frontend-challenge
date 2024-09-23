@@ -163,10 +163,10 @@ static_data = [
 class SimpleHandler(BaseHTTPRequestHandler):
     def do_GET(self):
       self.send_response(200)
-      # self.send_response(500, 'deu ruim')
-      
+      # self.send_response(500, 'Something went wrong')
+
       self.send_header('Content-type', 'application/json')
-      self.send_header('Access-Control-Allow-Origin', 'http://localhost:5173')
+      self.send_header('Access-Control-Allow-Origin', '*')
       self.end_headers()
       
       self.wfile.write(json.dumps(static_data).encode())

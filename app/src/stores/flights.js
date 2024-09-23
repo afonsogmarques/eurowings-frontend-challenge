@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { http } from '../helpers';
+import { http } from '../services';
 import { config } from '../config';
 import { defineStore } from 'pinia';
 

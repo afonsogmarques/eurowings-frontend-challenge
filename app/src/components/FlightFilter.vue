@@ -1,15 +1,9 @@
 <template>
-  <select v-model="filter">
-    <option
-      selected
-      :value="null"
-    >
+  <select v-model="filter" class="ellipsis" :disabled="isLoading">
+    <option selected :value="null" :hidden="!filter">
       {{ selectLabel }}
     </option>
-    <option
-      v-for="entry in uniqueEntries"
-      :value="entry"
-    >
+    <option v-for="entry in uniqueEntries" :value="entry">
       {{ entry }}
     </option>
   </select>
@@ -17,6 +11,11 @@
 
 <script setup>
   import { computed, ref } from 'vue';
+  import { useGeneralStore } from '../stores';
+  import { storeToRefs } from 'pinia';
+
+  const generalStore = useGeneralStore();
+  const { isLoading } = storeToRefs(generalStore);
 
   const filter = ref(null);
 
@@ -50,26 +49,3 @@
     return filter.value ? defaultLabel : props.label;
   });
 </script>
-
-<style scoped>
-  select {
-    flex: 1;
-
-    padding: 5px;
-    height: 40px;
-    max-width: 200px;
-
-    border: 0.1px solid rgb(194, 194, 194);
-    border-radius: 30px;
-    cursor: pointer;
-
-    font-size: 14px;
-    box-shadow: var(--drop-shadow);
-  }
-
-  @media (max-width: 415px) {
-    select {
-      max-width: 100px;
-    }
-  }
-</style>
