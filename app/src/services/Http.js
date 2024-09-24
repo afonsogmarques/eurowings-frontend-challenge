@@ -11,7 +11,7 @@ class Http {
     const { setIsLoading } = useGeneralStore();
 
     setIsLoading(true);
-    await sleep();
+    await sleep(); // I'm sorry... you can just comment this out...
 
     return fetch(url)
       .then(this.handleJSON)
@@ -20,7 +20,7 @@ class Http {
   }
 
   /**
-   * Handle the middle step of parsing a JSON response.
+   * Handle the intermediate step of parsing a JSON response.
    * @param { Response } response 
    * @returns { Promise<Error | any>}
    */

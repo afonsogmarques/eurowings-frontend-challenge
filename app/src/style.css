@@ -31,6 +31,8 @@ body {
 
   min-height: 100vh;
   width: 100vw;
+
+  overflow-x: hidden;
 }
 
 h1 {
@@ -52,7 +54,6 @@ select {
 
   padding: 5px;
   height: 40px;
-  max-width: 200px;
 
   border: 0.1px solid rgb(194, 194, 194);
   border-radius: 30px;
@@ -62,10 +63,20 @@ select {
   box-shadow: var(--drop-shadow);
 }
 
-@media (max-width: 415px) {
-  select {
-    max-width: 100px;
-  }
+/* Nicer scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 50px;
+  background: #ebebeb;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 50px;
+  background: #bbbbbb;
 }
 
 /* Utility classes */

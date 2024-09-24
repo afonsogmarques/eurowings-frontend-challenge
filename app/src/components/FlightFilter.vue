@@ -1,6 +1,6 @@
 <template>
   <select v-model="filter" class="ellipsis" :disabled="isLoading">
-    <option selected :value="null" :hidden="!filter">
+    <option selected :value="undefined" :hidden="!filter">
       {{ selectLabel }}
     </option>
     <option v-for="entry in uniqueEntries" :value="entry">
@@ -10,14 +10,14 @@
 </template>
 
 <script setup>
+  import { storeToRefs } from 'pinia';
   import { computed, ref } from 'vue';
   import { useGeneralStore } from '../stores';
-  import { storeToRefs } from 'pinia';
 
   const generalStore = useGeneralStore();
   const { isLoading } = storeToRefs(generalStore);
 
-  const filter = ref(null);
+  const filter = ref(undefined);
 
   const props = defineProps({
     label: {

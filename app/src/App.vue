@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-column gap-sm w-100 container">
-    <header class="header gap-sm">
+    <header class="header">
       <img
         src="./assets/eurowings-logo.svg"
         alt="Eurowings logo"
@@ -19,13 +19,7 @@
           v-model="destinationFilter"
           mapKey="destination"
         />
-        <select class="ellipsis" :disabled="isLoading">
-          <option value="arrival">Arrival date</option>
-          <option value="departure">Departure date</option>
-          <option disabled selected hidden>Sort by</option>
-          <option value="price">Price: cheapest first</option>
-          <option value="airport">Departure airport: from A to Z</option>
-        </select>
+        <FlightSort v-model="sortValue" />
       </div>
     </header>
     <div
@@ -51,12 +45,13 @@
   import LoadingSpinner from './components/ui/LoadingSpinner.vue';
 
   import { storeToRefs } from 'pinia';
-  import { useFlightsStore, useGeneralStore } from './stores';
   import { computed, ref, onBeforeMount } from 'vue';
+  import { useFlightsStore, useGeneralStore } from './stores';
+  import FlightSort from './components/FlightSort.vue';
 
   /** I know a store is overkill in this specific situation, but the
-   * flights info is probably something that would make sense to keep in a store in a larger app
-   * in order to share it across different components.
+   * flights info is probably something that would make sense to keep in a
+   * store in a larger app in order to share it across different components.
    */
   const flightsStore = useFlightsStore();
   const { fetchFlights } = flightsStore;
@@ -74,26 +69,65 @@
     'content-center': isLoading.value || !filteredFlights.value.length,
   }));
 
+  const sortValue = ref(undefined);
+
   /** Returns all flights matching the origin and destination filters. */
   const filteredFlights = computed(() => {
-    /**
-     * Filters an array of flights based on both origin and destination filters.
-     * @param flight The flight in the current iteration
-     * @returns { boolean }
-     */
-    const filterFlights = (flight) => {
-      const matchesOrigin =
-        !originFilter.value || flight.origin === originFilter.value;
+    if (!flights.value) return [];
 
-      const matchesDestination =
-        !destinationFilter.value ||
-        flight.destination === destinationFilter.value;
+    const filteredFlights = flights.value.filter(filterFlights);
+    const sortFn = sortFlights(sortValue.value);
 
-      return matchesOrigin && matchesDestination;
-    };
-
-    return flights.value?.filter(filterFlights) || [];
+    return filteredFlights.sort(sortFn);
   });
+
+  /**
+   * Filters flights based on currently active origin and destination filters.
+   * To be used as an Array.prototype.filter() callback.
+   * @param { Object } flight - The flight object to check.
+   * @return { boolean } - True if the flight matches the active filters, otherwise false.
+   */
+  function filterFlights(flight) {
+    const matchesDestination =
+      !destinationFilter.value ||
+      flight.destination === destinationFilter.value;
+
+    const matchesOrigin =
+      !originFilter.value || flight.origin === originFilter.value;
+
+    return matchesOrigin && matchesDestination;
+  }
+
+  /**
+   * Implements a custom sort using currying. I'm aware this doesn't
+   * account for sort order and could be improved towards such a solution.
+   * @param { string | number } sortValue The value to access on a flight Object.
+   * @returns { Object[] }
+   */
+  function sortFlights(sortValue) {
+    return function (a, b) {
+      const isValid = sortValue && typeof sortValue === 'string';
+
+      // Keeps sort order the same.
+      if (!isValid) return 0;
+
+      const isDate =
+        sortValue === 'returnDate' || sortValue === 'departureDate';
+      const isAmount = sortValue === 'amount';
+
+      // Handles the "price" corner case.
+      if (isAmount) return +a.price[sortValue] - +b.price[sortValue];
+
+      // Handles the "dates" corner case.
+      if (isDate) return Date.parse(a[sortValue]) - Date.parse(b[sortValue]);
+
+      const isNumber = Number.isFinite(a[sortValue]);
+
+      return isNumber
+        ? a[sortValue] - b[sortValue]
+        : a[sortValue].localeCompare(b[sortValue]);
+    };
+  }
 </script>
 
 <style scoped>
@@ -115,11 +149,15 @@
     padding: 2rem 0;
 
     flex-wrap: wrap;
+    gap: 20px;
   }
 
   .filter-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+
+    margin-left: auto;
+    max-width: 500px;
   }
 </style>

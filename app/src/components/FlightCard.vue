@@ -5,7 +5,8 @@
         <span class="bold">{{ flight.origin }}</span
         ><span>➡️</span><span class="bold">{{ flight.destination }}</span>
       </div>
-      <span>{{ flight.departureDate }}</span>
+      <p>🛫 {{ flight.departureDate }}</p>
+      <p>🛬 {{ flight.returnDate }}</p>
     </div>
     <p class="bold">€{{ flight.price.amount }}</p>
   </div>
