@@ -7,5 +7,11 @@ From project root, please run:
 ```console
 $ cd app
 $ npm run server
+```
+
+Then, on a separate process:
+
+```console
+$ cd app
 $ npm run dev
 ```
