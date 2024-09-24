@@ -14,7 +14,7 @@ class SimpleHandler(BaseHTTPRequestHandler):
       self.wfile.write(json.dumps(flight_data).encode())
 
 def run(server_class=HTTPServer, handler_class=SimpleHandler, port=8000):
-    server_address = ('127.0.0.1', port)
+    server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f"Serving on port {port}")
     httpd.serve_forever()
