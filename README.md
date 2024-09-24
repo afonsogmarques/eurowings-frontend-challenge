@@ -6,6 +6,7 @@ From project root, please run:
 
 ```console
 $ cd app
+$ npm install
 $ npm run server
 ```
 
