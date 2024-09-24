@@ -5,7 +5,7 @@
 From project root, please run:
 
 ```console
-~/eurowings-frontend-challenge$ cd app
-~/eurowings-frontend-challenge$ npm run server
-~/eurowings-frontend-challenge$ npm run dev
+$ cd app
+$ npm run server
+$ npm run dev
 ```
